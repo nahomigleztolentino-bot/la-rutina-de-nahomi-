@@ -68,9 +68,13 @@ document.getElementById('add').addEventListener('click',()=>{
 const input=document.getElementById('newTask');const value=input.value.trim();
 if(value){tasks.push({text:value,done:false});input.value='';save()}
 });
+
 document.getElementById('change').addEventListener('click',()=>{
-document.getElementById('quote').textContent=quotes[Math.floor(Math.random()*quotes.length)];
+  const quote=document.getElementById('quote');
+  const current=quotes.indexOf(quote.textContent);
+  quote.textContent=quotes[(current+1)%quotes.length];
 });
+
 document.getElementById('fecha').textContent=new Date().toLocaleDateString('es-MX',{weekday:'long',day:'numeric',month:'long'});
 render();
 </script>
