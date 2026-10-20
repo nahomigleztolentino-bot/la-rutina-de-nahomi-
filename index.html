@@ -1,0 +1,338 @@
+
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffe4ef">
+<title>La rutina de Nahomi 🌷</title>
+<style>
+:root {
+  --pink:#f6a9c8;
+  --pale:#fff0f6;
+  --purple:#a78bba;
+  --text:#70445b;
+  --white:#fffafd;
+}
+* { box-sizing:border-box; }
+body {
+  margin:0;
+  padding:22px 15px 40px;
+  background:linear-gradient(160deg,#fff0f6,#f9efff,#fff5e9);
+  color:var(--text);
+  font-family:"Trebuchet MS",Arial,sans-serif;
+}
+main { max-width:520px; margin:auto; }
+header { text-align:center; padding:12px 0 20px; }
+.bow { font-size:35px; }
+h1 { font-size:30px; margin:5px 0; color:#ce709d; }
+.subtitle { font-size:14px; color:#a37b98; }
+.card {
+  background:rgba(255,250,253,.94);
+  border:2px solid #f8d6e5;
+  border-radius:23px;
+  padding:18px;
+  margin-bottom:17px;
+  box-shadow:0 5px 18px #d8a5c51c;
+}
+h2 { font-size:19px; margin:0 0 13px; }
+.date { text-align:center; font-size:13px; margin-bottom:12px; }
+.progress-bg {
+  background:#f8dfeb;
+  height:13px;
+  border-radius:20px;
+  overflow:hidden;
+  margin:12px 0 7px;
+}
+#progress {
+  height:100%;
+  width:0%;
+  background:linear-gradient(90deg,#f5a2c5,#c5a2e8);
+  border-radius:20px;
+  transition:width .25s;
+}
+#progressText { text-align:center; font-size:13px; }
+.task {
+  display:flex;
+  align-items:center;
+  gap:11px;
+  padding:12px 3px;
+  border-bottom:1px dashed #f2d5e3;
+}
+.task:last-child { border-bottom:0; }
+.task input {
+  width:21px; height:21px;
+  accent-color:#df8eb4;
+  flex-shrink:0;
+}
+.task span { flex:1; line-height:1.4; overflow-wrap:anywhere; }
+.task.done span {
+  text-decoration:line-through;
+  opacity:.55;
+}
+.remove {
+  border:0; background:#fff0f6; color:#b66a91;
+  border-radius:10px; padding:7px 9px; cursor:pointer;
+}
+.addrow { display:flex; gap:8px; margin-top:13px; }
+input[type="text"] {
+  min-width:0; flex:1;
+  border:1.5px solid #f1ccde;
+  border-radius:13px; padding:12px;
+  background:white; color:var(--text); font-size:14px;
+}
+button {
+  border:0; cursor:pointer; font:inherit;
+  border-radius:13px; padding:11px 14px;
+}
+.primary {
+  background:#e99cbd; color:white; font-weight:bold;
+}
+.secondary { background:#f8e8f2; color:#895a79; }
+.actions { display:flex; flex-wrap:wrap; gap:8px; }
+.actions button { flex:1; }
+.note {
+  width:100%; min-height:95px; resize:vertical;
+  border:1.5px solid #f1ccde; border-radius:14px;
+  padding:12px; font:inherit; color:var(--text);
+  background:white;
+}
+footer { text-align:center; color:#a57c98; font-size:13px; padding:8px; }
+.small { font-size:12px; color:#a17d95; }
+</style>
+</head>
+<body>
+<main>
+<header>
+  <div class="bow">🎀 🧸 🍓</div>
+  <h1>La rutina de Nahomi</h1>
+  <div class="subtitle">pequeños pasos, días bonitos ♡</div>
+</header>
+
+<section class="card">
+  <div class="date" id="today"></div>
+  <h2>🌷 Mi progreso de hoy</h2>
+  <div id="progressText">0% completado</div>
+  <div class="progress-bg"><div id="progress"></div></div>
+  <div class="small" style="text-align:center">
+    ¡Cada pequeño logro cuenta, princesita! 💗
+  </div>
+</section>
+
+<section class="card">
+  <h2>☀️ Mi mañana</h2>
+  <div id="morning"></div>
+  <form class="addrow" id="morningForm">
+    <input id="morningInput" type="text"
+      placeholder="Agregar una tarea..." maxlength="100">
+    <button class="primary" type="submit">＋</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>🌸 Mi tarde</h2>
+  <div id="afternoon"></div>
+  <form class="addrow" id="afternoonForm">
+    <input id="afternoonInput" type="text"
+      placeholder="Agregar una tarea..." maxlength="100">
+    <button class="primary" type="submit">＋</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>🌙 Mi noche</h2>
+  <div id="night"></div>
+  <form class="addrow" id="nightForm">
+    <input id="nightInput" type="text"
+      placeholder="Agregar una tarea..." maxlength="100">
+    <button class="primary" type="submit">＋</button>
+  </form>
+</section>
+
+<section class="card">
+  <h2>💌 Mis pensamientos</h2>
+  <p class="small">¿Qué fue lo más bonito de mi día?</p>
+  <textarea id="diary" class="note"
+    placeholder="Escribe aquí tus pensamientos..."></textarea>
+  <p class="small">Tus notas se guardan en este navegador.</p>
+</section>
+
+<section class="card">
+  <h2>🧸 Mi espacio bonito</h2>
+  <div class="actions">
+    <button class="secondary" id="reset">↻ Reiniciar tareas</button>
+    <button class="secondary" id="celebrate">♡ Mensajito</button>
+  </div>
+  <p id="message" style="text-align:center;margin-bottom:0">
+    Eres capaz de hacer cosas bonitas. 🌷
+  </p>
+</section>
+
+<footer>Hecho con cariño para Nahomi 💗<br>
+  ⋆｡°✩ 🎀 🍓 🧸 ✩°｡⋆
+</footer>
+</main>
+
+<script>
+const defaults = {
+  morning: [
+    "Despertar y estirarme 🌷",
+    "Tender mi cama 🧸",
+    "Lavar mi carita y cepillar mis dientes 🫧",
+    "Desayunar rico 🍓",
+    "Prepararme para mis actividades 🎀"
+  ],
+  afternoon: [
+    "Comer y tomar agüita 💧",
+    "Hacer mis tareas o pendientes 📚",
+    "Tomarme un descansito ☁️",
+    "Dedicar tiempo a algo que me gusta 🎨"
+  ],
+  night: [
+    "Preparar mis cosas para mañana 🌙",
+    "Cuidar mi higiene personal 🫧",
+    "Anotar algo bonito de mi día 💌",
+    "Dejar el celular y descansar 🧸"
+  ]
+};
+
+const keys = ["morning", "afternoon", "night"];
+const storageKey = "nahomi-rutina-v1";
+let data;
+
+try {
+  data = JSON.parse(localStorage.getItem(storageKey)) || {};
+} catch (e) {
+  data = {};
+}
+
+keys.forEach(key => {
+  if (!Array.isArray(data[key])) {
+    data[key] = defaults[key].map(text => ({
+      text, done:false
+    }));
+  }
+});
+
+if (typeof data.diary !== "string") data.diary = "";
+
+function save() {
+  try {
+    localStorage.setItem(storageKey, JSON.stringify(data));
+  } catch (e) {
+    // La rutina sigue funcionando aunque el navegador
+    // no permita guardar datos.
+  }
+}
+
+function render() {
+  let total = 0, completed = 0;
+
+  keys.forEach(key => {
+    const container = document.getElementById(key);
+    container.replaceChildren();
+
+    data[key].forEach((task, index) => {
+      total++;
+      if (task.done) completed++;
+
+      const row = document.createElement("div");
+      row.className = "task" + (task.done ? " done" : "");
+
+      const check = document.createElement("input");
+      check.type = "checkbox";
+      check.checked = task.done;
+      check.setAttribute("aria-label", "Completar " + task.text);
+      check.addEventListener("change", () => {
+        task.done = check.checked;
+        save();
+        render();
+      });
+
+      const label = document.createElement("span");
+      label.textContent = task.text;
+
+      const remove = document.createElement("button");
+      remove.className = "remove";
+      remove.type = "button";
+      remove.textContent = "×";
+      remove.setAttribute("aria-label", "Eliminar tarea");
+      remove.addEventListener("click", () => {
+        data[key].splice(index, 1);
+        save();
+        render();
+      });
+
+      row.append(check, label, remove);
+      container.appendChild(row);
+    });
+  });
+
+  const percent = total ? Math.round(completed / total * 100) : 0;
+  document.getElementById("progress").style.width = percent + "%";
+  document.getElementById("progressText").textContent =
+    `${completed} de ${total} tareas · ${percent}% completado`;
+
+  if (total > 0 && completed === total) {
+    document.getElementById("message").textContent =
+      "¡Lo lograste, Nahomi! ¡Estoy orgullosa de tu esfuerzo! 🎀";
+  }
+}
+
+keys.forEach(key => {
+  const form = document.getElementById(key + "Form");
+  const input = document.getElementById(key + "Input");
+
+  form.addEventListener("submit", event => {
+    event.preventDefault();
+    const text = input.value.trim();
+    if (!text) return;
+
+    data[key].push({text, done:false});
+    input.value = "";
+    save();
+    render();
+  });
+});
+
+const diary = document.getElementById("diary");
+diary.value = data.diary;
+diary.addEventListener("input", () => {
+  data.diary = diary.value;
+  save();
+});
+
+document.getElementById("reset").addEventListener("click", () => {
+  if (!confirm("¿Quieres desmarcar todas las tareas?")) return;
+  keys.forEach(key => data[key].forEach(task => {
+    task.done = false;
+  }));
+  save();
+  render();
+  document.getElementById("message").textContent =
+    "¡Un nuevo comienzo, princesita! 🌷";
+});
+
+document.getElementById("celebrate").addEventListener("click", () => {
+  const messages = [
+    "No tienes que hacerlo todo perfecto. 💗",
+    "Un pasito a la vez también es avanzar. 🌸",
+    "Mereces descansar y disfrutar. 🧸",
+    "Hoy puedes volver a intentarlo. 🍓",
+    "Tu esfuerzo importa, Nahomi. 🎀"
+  ];
+  document.getElementById("message").textContent =
+    messages[Math.floor(Math.random() * messages.length)];
+});
+
+document.getElementById("today").textContent =
+  new Date().toLocaleDateString("es-MX", {
+    weekday:"long", day:"numeric", month:"long", year:"numeric"
+  });
+
+save();
+render();
+</script>
+</body>
+  </html>
+  
