@@ -1,0 +1,51 @@
+
+name: Compilar APK Android
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Descargar codigo
+        uses: actions/checkout@v4
+
+      - name: Configurar Java
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Dar permisos a Gradle
+        run: |
+          if [ -f gradlew ]; then
+            chmod +x gradlew
+          fi
+
+      - name: Compilar APK debug
+        run: |
+          if [ -f gradlew ]; then
+            ./gradlew assembleDebug
+          elif [ -f gradlew.bat ]; then
+            echo "Se necesita gradlew para Linux"
+            exit 1
+          else
+            echo "No se encontro gradlew en la raiz del proyecto"
+            exit 1
+          fi
+
+      - name: Guardar APK
+        uses: actions/upload-artifact@v4
+        with:
+          name: rutina-aesthetic-apk
+          path: "**/build/outputs/apk/debug/*.apk"
+          if-no-files-found: error
+          
